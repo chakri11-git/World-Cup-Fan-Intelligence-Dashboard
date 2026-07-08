@@ -13,15 +13,41 @@ const supportRoutes = require('./src/routes/supportRoutes');
 
 const errorHandler = require('./src/middlewares/errorHandler');
 
+const rateLimit = require('express-rate-limit');
+
 const app = express();
 
-// Global Middlewares
+// Configure strict CORS allowed origins to resolve credentials + wildcard conflict
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://world-cup-fan-intelligence-dashboar-seven.vercel.app'] 
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://world-cup-fan-intelligence-dashboar-seven.vercel.app' 
-    : '*',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
+// Rate limiter middleware to prevent spamming and Gemini API quota exhaustion
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests from this IP. Please try again after 15 minutes.'
+  }
+});
+
+// Apply rate limiting to all API endpoints
+app.use('/api', limiter);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -140,3 +140,11 @@ cd frontend
 npm run build
 ```
 This generates an optimized `/dist` folder with bundled WebP assets, compressed styling, and dynamic CSS layouts.
+
+---
+
+## 🔒 Security & Session Authentication Notes
+
+* **No Server-Side Session Auth**: In this current stage of the MVP development, authentication is fully mocked. There are no registration or login/logout endpoints, and all authorization states are handled client-side. The dead JWT `authMiddleware.js` file has been fully removed from the source tree to clearly reflect that server-side auth is not yet implemented.
+* **Storage Assumptions**: In the mock frontend, authentication status (such as simulated fan profile sessions) uses local storage (`localStorage`). For production enterprise hardening, session management should be migrated to server-set `httpOnly`, `Secure`, and `SameSite=Strict` HTTP cookies to prevent XSS-based session hijacking.
+* **Input Validation & Sanitization**: Strict validation filters exist on all path parameters and input bodies (rejecting non-alphanumeric identifiers and oversized text payloads) to prevent path injection and server flooding.

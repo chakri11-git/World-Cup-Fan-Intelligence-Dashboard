@@ -45,11 +45,10 @@ exports.getSupportAnalytics = async (req, res, next) => {
  */
 exports.castSupportVote = async (req, res, next) => {
   const { teamId } = req.body;
+  if (!teamId || typeof teamId !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(teamId)) {
+    return res.status(400).json({ success: false, message: 'Invalid or missing teamId format.' });
+  }
   try {
-    if (!teamId) {
-      return res.status(400).json({ success: false, message: 'teamId is required to vote.' });
-    }
-
     logger.info(`Received fan support vote for team: ${teamId}`);
     const teamRecord = supportCounts.find(t => t.teamId.toLowerCase() === teamId.toLowerCase());
 

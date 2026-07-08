@@ -24,6 +24,9 @@ exports.getAllTeams = async (req, res, next) => {
  */
 exports.getTeamById = async (req, res, next) => {
   const { id } = req.params;
+  if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    return res.status(400).json({ success: false, message: 'Invalid team identifier format.' });
+  }
   try {
     logger.info(`Fetching team details for ID: ${id}`);
     const teams = await footballApiService.getTeams();

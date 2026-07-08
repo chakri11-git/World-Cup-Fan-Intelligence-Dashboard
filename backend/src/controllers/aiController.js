@@ -12,6 +12,9 @@ const logger = require('../utils/logger');
  */
 exports.getMatchPrediction = async (req, res, next) => {
   const { matchId } = req.params;
+  if (!matchId || !/^[a-zA-Z0-9_-]+$/.test(matchId)) {
+    return res.status(400).json({ success: false, message: 'Invalid matchId format.' });
+  }
   try {
     logger.info(`Requested AI prediction for match: ${matchId}`);
     
@@ -38,6 +41,16 @@ exports.postFanChat = async (req, res, next) => {
   try {
     if (!username || !message || !matchId) {
       return res.status(400).json({ success: false, message: 'username, message, and matchId are required.' });
+    }
+
+    if (typeof username !== 'string' || username.trim().length === 0 || username.length > 100) {
+      return res.status(400).json({ success: false, message: 'Invalid username format.' });
+    }
+    if (typeof message !== 'string' || message.trim().length === 0 || message.length > 500) {
+      return res.status(400).json({ success: false, message: 'Invalid message format.' });
+    }
+    if (typeof matchId !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(matchId)) {
+      return res.status(400).json({ success: false, message: 'Invalid matchId format.' });
     }
 
     logger.info(`Received community fan chat from ${username} on match ${matchId}`);

@@ -40,6 +40,9 @@ exports.getMatches = async (req, res, next) => {
  */
 exports.getMatchById = async (req, res, next) => {
   const { id } = req.params;
+  if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    return res.status(400).json({ success: false, message: 'Invalid match identifier format.' });
+  }
   try {
     logger.info(`Fetching detailed stats for match ID: ${id}`);
     let match;
