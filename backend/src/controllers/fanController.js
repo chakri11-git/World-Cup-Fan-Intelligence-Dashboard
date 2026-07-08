@@ -2,8 +2,16 @@ const initialProfile = require('../mock/fanProfileMock.json');
 const logger = require('../utils/logger');
 const geminiService = require('../services/ai/geminiService');
 
-// Local in-memory session persistence mock
-let sessionProfile = {
+/**
+ * Per-user profile store keyed by client-generated UUID.
+ * The frontend sends a UUID via the `x-fan-session-id` header (stored in localStorage).
+ * This avoids a shared-singleton race condition without requiring full auth.
+ * Max 500 entries to prevent unbounded memory growth.
+ */
+const MAX_SESSIONS = 500;
+const profileStore = new Map();
+
+const DEFAULT_PROFILE = {
   ...initialProfile,
   country: 'United States',
   favoritePlayer: 'Lionel Messi',
@@ -11,14 +19,30 @@ let sessionProfile = {
 };
 
 /**
+ * Returns the per-session profile for the given sessionId, creating one if absent.
+ */
+function getSessionProfile(sessionId) {
+  if (!profileStore.has(sessionId)) {
+    if (profileStore.size >= MAX_SESSIONS) {
+      // Evict the oldest entry when the store is full
+      const oldestKey = profileStore.keys().next().value;
+      profileStore.delete(oldestKey);
+    }
+    profileStore.set(sessionId, { ...DEFAULT_PROFILE });
+  }
+  return profileStore.get(sessionId);
+}
+
+/**
  * Controller to fetch fan profile details
  */
 exports.getProfile = async (req, res, next) => {
   try {
-    logger.info('Fetching user fan profile parameters');
+    const sessionId = req.headers['x-fan-session-id'] || 'default';
+    logger.info(`Fetching fan profile for session: ${sessionId}`);
     res.status(200).json({
       success: true,
-      data: sessionProfile
+      data: getSessionProfile(sessionId)
     });
   } catch (error) {
     next(error);
@@ -48,19 +72,21 @@ exports.updateProfile = async (req, res, next) => {
   }
 
   try {
-    logger.info('Updating user fan profile parameters');
+    const sessionId = req.headers['x-fan-session-id'] || 'default';
+    logger.info(`Updating fan profile for session: ${sessionId}`);
+    const profile = getSessionProfile(sessionId);
     
-    if (name) sessionProfile.name = name;
-    if (favoriteTeam) sessionProfile.favoriteTeam = favoriteTeam;
-    if (themePreference) sessionProfile.themePreference = themePreference;
-    if (country) sessionProfile.country = country;
-    if (favoritePlayer) sessionProfile.favoritePlayer = favoritePlayer;
-    if (reasonForSupport) sessionProfile.reasonForSupport = reasonForSupport;
+    if (name) profile.name = name;
+    if (favoriteTeam) profile.favoriteTeam = favoriteTeam;
+    if (themePreference) profile.themePreference = themePreference;
+    if (country) profile.country = country;
+    if (favoritePlayer) profile.favoritePlayer = favoritePlayer;
+    if (reasonForSupport) profile.reasonForSupport = reasonForSupport;
 
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      data: sessionProfile
+      data: profile
     });
   } catch (error) {
     next(error);
@@ -72,8 +98,10 @@ exports.updateProfile = async (req, res, next) => {
  */
 exports.getRecommendations = async (req, res, next) => {
   try {
-    logger.info('Generating AI personalized fan recommendations');
-    const recommendations = await geminiService.generateFanRecommendations(sessionProfile);
+    const sessionId = req.headers['x-fan-session-id'] || 'default';
+    logger.info(`Generating AI recommendations for session: ${sessionId}`);
+    const profile = getSessionProfile(sessionId);
+    const recommendations = await geminiService.generateFanRecommendations(profile);
     res.status(200).json({
       success: true,
       data: recommendations

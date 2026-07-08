@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, Heart, Trophy, RefreshCw, User, Shield, Compass } from 'lucide-react';
@@ -6,6 +6,7 @@ import api from '../services/api';
 import Navbar from '../components/landing/Navbar';
 import PageTransition from '../components/common/PageTransition';
 import worldcupImg from '../assets/worldcup.webp';
+import { AppContext } from '../context/AppContext';
 
 const TeamExplorer = () => {
   const [teams, setTeams] = useState([]);
@@ -17,6 +18,18 @@ const TeamExplorer = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('All');
   const [selectedRegion, setSelectedRegion] = useState('All');
+
+  // Pull support vote analytics for badge indicators
+  const { supportAnalytics } = useContext(AppContext);
+
+  // Compute the top-3 team IDs by vote count so we can show the 🔥 badge
+  const top3TeamIds = React.useMemo(() => {
+    if (!supportAnalytics?.teamVotes) return [];
+    return Object.entries(supportAnalytics.teamVotes)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([teamId]) => teamId);
+  }, [supportAnalytics]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -182,22 +195,32 @@ const TeamExplorer = () => {
                   {/* Header card info */}
                   <div>
                     <div className="flex justify-between items-start">
-                      <span className="text-4xl" role="img" aria-label={team.name}>
-                        {team.flag}
-                      </span>
-                      <button
-                        onClick={() => handleFavoriteToggle(team.teamId)}
-                        className="text-gray-500 hover:text-red-500 transition-colors p-1 cursor-pointer"
-                      >
-                        <Heart 
-                          className={`h-5.5 w-5.5 ${
-                            favoriteTeam === team.teamId 
-                              ? 'fill-red-500 text-red-500' 
-                              : ''
-                          }`} 
-                        />
-                      </button>
-                    </div>
+                        <span className="text-4xl" role="img" aria-label={team.name}>
+                          {team.flag}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {top3TeamIds.includes(team.teamId) && (
+                            <span
+                              title={`Top ${top3TeamIds.indexOf(team.teamId) + 1} most supported team`}
+                              className="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-0.5"
+                            >
+                              🔥 Hot
+                            </span>
+                          )}
+                          <button
+                            onClick={() => handleFavoriteToggle(team.teamId)}
+                            className="text-gray-500 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                          >
+                            <Heart 
+                              className={`h-5.5 w-5.5 ${
+                                favoriteTeam === team.teamId 
+                                  ? 'fill-red-500 text-red-500' 
+                                  : ''
+                              }`} 
+                            />
+                          </button>
+                        </div>
+                      </div>
 
                     <div className="mt-4">
                       <h3 className="text-xl font-bold text-white flex items-center gap-2">

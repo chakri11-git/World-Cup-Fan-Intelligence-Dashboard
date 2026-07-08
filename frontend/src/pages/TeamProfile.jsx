@@ -4,6 +4,7 @@ import { ArrowLeft, Trophy, Shield, User, Activity, Cpu, Calendar } from 'lucide
 import api from '../services/api';
 import Navbar from '../components/landing/Navbar';
 import PageTransition from '../components/common/PageTransition';
+import AIDisclaimer from '../components/common/AIDisclaimer';
 
 const TeamProfile = () => {
   const { teamId } = useParams();
@@ -350,6 +351,7 @@ const TeamProfile = () => {
                     <div className="text-[10px] text-gray-500 text-right mt-2 font-mono">
                       Model: {aiSummary.engine} (Strictly Factual Grounding)
                     </div>
+                    <AIDisclaimer />
                   </div>
                 ) : (
                   <div className="text-gray-500 text-sm">Formulating AI model prediction summary...</div>

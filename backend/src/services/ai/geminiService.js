@@ -456,7 +456,8 @@ Each object must contain the following keys:
 - "description": A detailed, personalized explanation of why this fits their profile.
 - "type": One of "match", "team", "group".
 - "actionLabel": e.g., "Explore Team", "Join Chat", "View Match".
-- "actionLink": e.g., "/", "/teams", "/groups".`;
+- "actionLink": e.g., "/", "/teams", "/groups".
+- "confidenceScore": A number between 0.0 and 1.0 indicating how relevant this recommendation is to the profile.`;
 
     try {
       if (!this.apiKey) {
@@ -482,21 +483,24 @@ Each object must contain the following keys:
         description: `Since you support ${favoriteTeam}, check out their squad stats, form sheets, and Gemini's custom tactical predictions.`,
         type: "team",
         actionLabel: "Explore Team",
-        actionLink: `/teams`
+        actionLink: `/teams`,
+        confidenceScore: 0.92
       },
       {
         title: `Join the Live Fan Chat Room`,
         description: `Connect with other fans to discuss if ${favoritePlayer} is the MVP of the tournament and review live AI sentiment metrics.`,
         type: "group",
         actionLabel: "Join Chat",
-        actionLink: `/`
+        actionLink: `/`,
+        confidenceScore: 0.78
       },
       {
         title: `Compare Pros & Cons in the Next Match`,
         description: `Gemini Pro has prepped grounded tactical comparisons for the upcoming matches. Go analyze the win probabilities live.`,
         type: "match",
         actionLabel: "Analyze Matches",
-        actionLink: `/`
+        actionLink: `/`,
+        confidenceScore: 0.85
       }
     ];
   }

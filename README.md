@@ -10,6 +10,8 @@ Welcome to the **World Cup Fan Dashboard**—a highly interactive, real-time MER
 
 The system is styled with a premium **iOS-style Glassmorphism theme** layered over dynamic stadium wallpapers to give users an immersive, stadium-like experience.
 
+> **⚡ Default Mode (no API keys configured):** The app runs **entirely in simulation/mock mode** using hard-coded fixture and profile data — no live external data is fetched. To enable live data, add the API keys listed in [`backend/.env.example`](./backend/.env.example). See the [External Data Sources](#-external-data-sources--licensing) section below.
+
 ---
 
 ## 🏗️ System Architecture

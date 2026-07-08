@@ -5,6 +5,7 @@ import api from '../services/api';
 import Navbar from '../components/landing/Navbar';
 import PageTransition from '../components/common/PageTransition';
 import profileImg from '../assets/profile.jpg';
+import AIDisclaimer from '../components/common/AIDisclaimer';
 
 const FanProfilePage = () => {
   // Form Input States
@@ -440,8 +441,13 @@ const FanProfilePage = () => {
                         <span className="text-xs font-bold text-white flex items-center gap-1.5">
                           <span className={`h-1.5 w-1.5 rounded-full ${
                             rec.type === 'team' ? 'bg-pitch-green' : rec.type === 'group' ? 'bg-blue-500' : 'bg-trophy-gold'
-                          }`}></span>
+                          }`} />
                           {rec.title}
+                          {rec.confidenceScore != null && (
+                            <span className="ml-auto text-[9px] text-gray-500 font-mono bg-white/5 border border-white/5 px-1.5 py-0.5 rounded">
+                              {Math.round(rec.confidenceScore * 100)}% match
+                            </span>
+                          )}
                         </span>
                         <p className="text-xs text-gray-400 leading-relaxed">{rec.description}</p>
                         <Link 
@@ -456,6 +462,7 @@ const FanProfilePage = () => {
                 ) : (
                   <div className="text-xs text-gray-600 italic">No recommendations available.</div>
                 )}
+                <AIDisclaimer />
               </div>
 
             </div>

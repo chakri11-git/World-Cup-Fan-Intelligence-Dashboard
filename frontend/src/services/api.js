@@ -8,18 +8,27 @@ const api = axios.create({
   },
 });
 
-// Configure Axios Request interceptor to attach JWT token automatically
+/**
+ * Generate or retrieve a client-side UUID for per-user fan profile isolation.
+ * This is NOT auth — it's a session discriminator that prevents two browsers
+ * from overwriting each other's profile in the shared in-memory backend store.
+ */
+function getFanSessionId() {
+  let id = localStorage.getItem('wc_session_id');
+  if (!id) {
+    id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('wc_session_id', id);
+  }
+  return id;
+}
+
+// Attach the fan session UUID on every outgoing request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('wc_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    config.headers['x-fan-session-id'] = getFanSessionId();
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Configure Response interceptor to format error handlers
@@ -33,3 +42,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+
