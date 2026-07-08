@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, Globe, Heart, Shield, Award, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { User, Globe, Heart, Shield, Award, CheckCircle, AlertCircle, RefreshCw, Sparkles } from 'lucide-react';
 import api from '../services/api';
 import Navbar from '../components/landing/Navbar';
 import PageTransition from '../components/common/PageTransition';
@@ -19,11 +20,13 @@ const FanProfilePage = () => {
   const [badges, setBadges] = useState([]);
   
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
-  
-  // Validation Errors state
+  const [saving, setSaving] = useState(false);
+
+  // Recommendations States
+  const [recs, setRecs] = useState([]);
+  const [loadingRecs, setLoadingRecs] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
   const teamsList = [
@@ -66,8 +69,49 @@ const FanProfilePage = () => {
     }
   };
 
+  const fetchRecommendations = async () => {
+    setLoadingRecs(true);
+    try {
+      const response = await api.get('/fan-profile/recommendations');
+      if (response.data && response.data.success) {
+        setRecs(response.data.data);
+      } else {
+        setRecs(response.data);
+      }
+    } catch (err) {
+      console.warn('Failed to load AI recommendations', err);
+      // Fallback local simulation in case backend is loading/mocking
+      setRecs([
+        {
+          title: `Explore Tactical Center`,
+          description: `Check out squad statistics, form sheets, and Gemini's custom tactical predictions for your favorite teams.`,
+          type: "team",
+          actionLabel: "Explore Team",
+          actionLink: `/teams`
+        },
+        {
+          title: `Join the Live Fan Chat Room`,
+          description: `Connect with other fans to discuss the latest match highlights and review live AI sentiment metrics.`,
+          type: "group",
+          actionLabel: "Join Chat",
+          actionLink: `/`
+        },
+        {
+          title: `Compare Pros & Cons in the Next Match`,
+          description: `Gemini Pro has prepped grounded tactical comparisons for the upcoming matches. Go analyze the win probabilities live.`,
+          type: "match",
+          actionLabel: "Analyze Matches",
+          actionLink: `/`
+        }
+      ]);
+    } finally {
+      setLoadingRecs(false);
+    }
+  };
+
   useEffect(() => {
     fetchProfileData();
+    fetchRecommendations();
   }, []);
 
   const validateForm = () => {
@@ -118,6 +162,7 @@ const FanProfilePage = () => {
 
       await api.put('/fan-profile', payload);
       setSuccessMsg('Fan Profile synced and saved successfully!');
+      fetchRecommendations(); // Refresh recommendations based on the new profile inputs!
       setTimeout(() => setSuccessMsg(null), 4000);
     } catch (err) {
       console.error(err);
@@ -370,6 +415,49 @@ const FanProfilePage = () => {
                 </div>
 
               </div>
+
+              {/* AI Fan Recommendations Section */}
+              <div className="glass-card p-6 border border-white/5 flex flex-col gap-4 mt-6">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-1.5">
+                    <Sparkles className="h-5 w-5 text-pitch-green" />
+                    AI Fan Recommendations
+                  </h3>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Tailored insights based on your favorite team, player, and tournament support reasons.
+                  </p>
+                </div>
+
+                {loadingRecs ? (
+                  <div className="text-xs text-gray-500 italic py-4">Generating recommendations...</div>
+                ) : recs.length > 0 ? (
+                  <div className="flex flex-col gap-3.5">
+                    {recs.map((rec, idx) => (
+                      <div 
+                        key={idx} 
+                        className="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col gap-2 hover:border-white/10 transition-colors"
+                      >
+                        <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <span className={`h-1.5 w-1.5 rounded-full ${
+                            rec.type === 'team' ? 'bg-pitch-green' : rec.type === 'group' ? 'bg-blue-500' : 'bg-trophy-gold'
+                          }`}></span>
+                          {rec.title}
+                        </span>
+                        <p className="text-xs text-gray-400 leading-relaxed">{rec.description}</p>
+                        <Link 
+                          to={rec.actionLink} 
+                          className="text-xs text-pitch-green hover:underline font-bold self-start mt-1 flex items-center gap-0.5"
+                        >
+                          {rec.actionLabel} &rarr;
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-600 italic">No recommendations available.</div>
+                )}
+              </div>
+
             </div>
 
           </div>

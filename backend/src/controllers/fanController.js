@@ -1,5 +1,6 @@
 const initialProfile = require('../mock/fanProfileMock.json');
 const logger = require('../utils/logger');
+const geminiService = require('../services/ai/geminiService');
 
 // Local in-memory session persistence mock
 let sessionProfile = {
@@ -62,6 +63,23 @@ exports.updateProfile = async (req, res, next) => {
       data: sessionProfile
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Controller to generate AI recommendations based on fan profile
+ */
+exports.getRecommendations = async (req, res, next) => {
+  try {
+    logger.info('Generating AI personalized fan recommendations');
+    const recommendations = await geminiService.generateFanRecommendations(sessionProfile);
+    res.status(200).json({
+      success: true,
+      data: recommendations
+    });
+  } catch (error) {
+    logger.error(`Error in getRecommendations controller: ${error.message}`);
     next(error);
   }
 };

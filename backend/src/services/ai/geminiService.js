@@ -418,6 +418,68 @@ TACTICAL BREAKDOWN: [A paragraph explaining tactical battle]`;
     if (negativeKeywords.some(kw => lowerText.includes(kw))) return 'NEGATIVE';
     return 'NEUTRAL';
   }
+
+  async generateFanRecommendations(profile, supportHistory = []) {
+    const favoriteTeam = profile.favoriteTeam || 'Argentina';
+    const favoritePlayer = profile.favoritePlayer || 'Lionel Messi';
+    
+    const prompt = `You are an expert AI football analyst. Based on a user's fan profile:
+- Favorite Team: ${favoriteTeam}
+- Favorite Player: ${favoritePlayer}
+- Reason for Support: ${profile.reasonForSupport || 'Loves the game'}
+- Support History: ${JSON.stringify(supportHistory)}
+
+Generate exactly 3 personalized recommendations for matches to watch, teams to explore, or chat groups to join.
+Your response MUST be a valid JSON array, containing exactly 3 objects. Do not include markdown wraps or backticks in the response, just the raw JSON.
+Each object must contain the following keys:
+- "title": A short, exciting recommendation title.
+- "description": A detailed, personalized explanation of why this fits their profile.
+- "type": One of "match", "team", "group".
+- "actionLabel": e.g., "Explore Team", "Join Chat", "View Match".
+- "actionLink": e.g., "/", "/teams", "/groups".`;
+
+    try {
+      if (!this.apiKey) {
+        return this._simulateFanRecommendations(profile);
+      }
+      
+      const response = await this._callGeminiAPI(this.preferredModel, prompt);
+      const cleaned = response.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleaned);
+    } catch (err) {
+      logger.warn(`Failed to generate live Gemini recommendations: ${err.message}. Using simulation fallback.`);
+      return this._simulateFanRecommendations(profile);
+    }
+  }
+
+  _simulateFanRecommendations(profile) {
+    const favoriteTeam = profile.favoriteTeam || 'Argentina';
+    const favoritePlayer = profile.favoritePlayer || 'Lionel Messi';
+    
+    return [
+      {
+        title: `Explore ${favoriteTeam} Tactical Center`,
+        description: `Since you support ${favoriteTeam}, check out their squad stats, form sheets, and Gemini's custom tactical predictions.`,
+        type: "team",
+        actionLabel: "Explore Team",
+        actionLink: `/teams`
+      },
+      {
+        title: `Join the Live Fan Chat Room`,
+        description: `Connect with other fans to discuss if ${favoritePlayer} is the MVP of the tournament and review live AI sentiment metrics.`,
+        type: "group",
+        actionLabel: "Join Chat",
+        actionLink: `/`
+      },
+      {
+        title: `Compare Pros & Cons in the Next Match`,
+        description: `Gemini Pro has prepped grounded tactical comparisons for the upcoming matches. Go analyze the win probabilities live.`,
+        type: "match",
+        actionLabel: "Analyze Matches",
+        actionLink: `/`
+      }
+    ];
+  }
 }
 
 module.exports = new GeminiService();

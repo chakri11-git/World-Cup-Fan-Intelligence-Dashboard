@@ -65,6 +65,16 @@ exports.castSupportVote = async (req, res, next) => {
       latestTimeline[teamRecord.teamName] += 1;
     }
 
+    // Emit real-time support update via WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('support_update', {
+        counts: supportCounts,
+        timeline: votingTrendTimeline
+      });
+      logger.info('[Socket.io] Broadcasted real-time support vote update');
+    }
+
     res.status(200).json({
       success: true,
       message: `Support registered successfully for ${teamRecord.teamName}.`,

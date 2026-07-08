@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import api from '../services/api';
 
 export const AppContext = createContext();
@@ -109,6 +110,27 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     fetchProfile();
     fetchSupportAnalytics();
+
+    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
+
+    socket.on('support_update', (data) => {
+      setSupportAnalytics((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          counts: data.counts,
+          timeline: data.timeline,
+          summary: {
+            ...prev.summary,
+            totalVotes: data.counts.reduce((acc, curr) => acc + curr.votes, 0)
+          }
+        };
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
