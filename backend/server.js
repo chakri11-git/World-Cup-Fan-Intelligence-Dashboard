@@ -14,7 +14,9 @@ const server = http.createServer(app);
 // Initialize Socket.io with cross-origin policies matching CORS middleware
 const io = socketIo(server, {
   cors: {
-    origin: "*",
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://world-cup-fan-intelligence-dashboar-seven.vercel.app' 
+      : '*',
     methods: ["GET", "POST", "PUT", "DELETE"]
   }
 });

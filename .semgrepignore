@@ -1,0 +1,28 @@
+# Ignore node dependencies
+node_modules/
+**/node_modules/**
+
+# Ignore build artifacts
+dist/
+**/dist/**
+build/
+**/build/**
+out/
+.next/
+.nuxt/
+
+# Ignore assets and lockfiles
+*.webp
+*.png
+*.jpg
+*.jpeg
+*.htm
+*.html
+package-lock.json
+**/package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore editor settings
+.vscode/
+.idea/

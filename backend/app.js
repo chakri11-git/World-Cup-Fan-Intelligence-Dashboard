@@ -16,7 +16,12 @@ const errorHandler = require('./src/middlewares/errorHandler');
 const app = express();
 
 // Global Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://world-cup-fan-intelligence-dashboar-seven.vercel.app' 
+    : '*',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
