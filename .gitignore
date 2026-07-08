@@ -55,3 +55,9 @@ temp/
 .eslintcache
 .parcel-cache
 .vite
+
+# Archives
+*.zip
+*.rar
+*.tar.gz
+*.7z

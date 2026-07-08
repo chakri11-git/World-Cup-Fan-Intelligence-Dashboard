@@ -26,3 +26,9 @@ pnpm-lock.yaml
 # Ignore editor settings
 .vscode/
 .idea/
+
+# Ignore archives
+*.zip
+*.rar
+*.tar.gz
+*.7z
