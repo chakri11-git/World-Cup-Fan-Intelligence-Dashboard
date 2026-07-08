@@ -12,13 +12,20 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 // Initialize Socket.io with cross-origin policies matching CORS middleware
-const socketOrigins = process.env.NODE_ENV === 'production' 
-  ? 'https://world-cup-fan-intelligence-dashboar-seven.vercel.app' 
-  : ['http://localhost:3000', 'http://localhost:5173'];
-
 const io = socketIo(server, {
   cors: {
-    origin: socketOrigins,
+    origin: (origin, callback) => {
+      const originClean = origin ? origin.replace(/\/$/, '') : '';
+      if (!origin || 
+          originClean.endsWith('.vercel.app') || 
+          originClean.includes('localhost') || 
+          originClean.includes('127.0.0.1')
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }

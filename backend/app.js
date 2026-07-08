@@ -24,7 +24,13 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const originClean = origin ? origin.replace(/\/$/, '') : '';
+    if (!origin || 
+        allowedOrigins.includes(originClean) || 
+        originClean.endsWith('.vercel.app') || 
+        originClean.includes('localhost') || 
+        originClean.includes('127.0.0.1')
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
