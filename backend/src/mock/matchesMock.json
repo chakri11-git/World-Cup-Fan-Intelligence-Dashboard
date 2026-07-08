@@ -1,0 +1,82 @@
+[
+  {
+    "matchId": "wc-2026-m01",
+    "homeTeam": "Argentina",
+    "awayTeam": "Brazil",
+    "status": "LIVE",
+    "minute": 74,
+    "score": {
+      "home": 2,
+      "away": 1
+    },
+    "venue": "Estadio Azteca, Mexico City",
+    "date": "2026-07-08T20:00:00Z",
+    "events": [
+      {
+        "time": 12,
+        "type": "GOAL",
+        "player": "Lionel Messi",
+        "team": "home"
+      },
+      {
+        "time": 42,
+        "type": "GOAL",
+        "player": "Vinicius Jr",
+        "team": "away"
+      },
+      {
+        "time": 68,
+        "type": "GOAL",
+        "player": "Lautaro Martinez",
+        "team": "home"
+      }
+    ]
+  },
+  {
+    "matchId": "wc-2026-m02",
+    "homeTeam": "France",
+    "awayTeam": "Spain",
+    "status": "SCHEDULED",
+    "minute": 0,
+    "score": {
+      "home": 0,
+      "away": 0
+    },
+    "venue": "MetLife Stadium, East Rutherford",
+    "date": "2026-07-09T18:00:00Z",
+    "events": []
+  },
+  {
+    "matchId": "wc-2026-m03",
+    "homeTeam": "England",
+    "awayTeam": "Germany",
+    "status": "FINISHED",
+    "minute": 90,
+    "score": {
+      "home": 1,
+      "away": 2
+    },
+    "venue": "SoFi Stadium, Los Angeles",
+    "date": "2026-07-07T15:00:00Z",
+    "events": [
+      {
+        "time": 30,
+        "type": "GOAL",
+        "player": "Harry Kane",
+        "team": "home"
+      },
+      {
+        "time": 55,
+        "type": "GOAL",
+        "player": "Jamal Musiala",
+        "team": "away"
+      },
+      {
+        "time": 88,
+        "type": "GOAL",
+        "player": "Kai Havertz",
+        "team": "away"
+      }
+    ]
+  }
+]

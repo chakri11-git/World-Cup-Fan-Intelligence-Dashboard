@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pitch-green: #10b981;
+  --color-trophy-gold: #f59e0b;
+  --font-sans: 'Geist Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: #020617;
+    background-image: 
+      linear-gradient(rgba(3, 7, 18, 0.76), rgba(3, 7, 18, 0.82)),
+      url('./assets/football-field-stadium-background-empty-space-green-lines-open-center-ideal-as-sports-design-banners-promotional-376963051.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: #f9fafb;
+    overflow-x: hidden;
+    letter-spacing: -0.015em;
+  }
+
+  /* Custom premium scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #030712;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Premium iOS Glassmorphism Layouts */
+.glass-card {
+  background: rgba(10, 15, 30, 0.22); /* More transparent for extreme glassmorphic depth */
+  backdrop-filter: blur(32px) saturate(220%);
+  -webkit-backdrop-filter: blur(32px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Sharper glass boundary line */
+  border-radius: 24px; /* Authentic iOS squircle radius */
+  box-shadow: 
+    0 12px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12); /* Brighter iOS glossy rim highlight */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(10, 15, 30, 0.32);
+  box-shadow: 
+    0 20px 50px -10px rgba(0, 0, 0, 0.6),
+    0 0 30px 2px rgba(16, 185, 129, 0.15),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.16);
+  transform: translateY(-3px);
+}
+
+/* Dynamic glow spotlight backdrop */
+.glow-spotlight {
+  background: radial-gradient(circle at 50% -10%, rgba(16, 185, 129, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Grid background patterns */
+.grid-bg {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* High contrast neon badges */
+.badge-live-neon {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+/* Reusable animated buttons */
+.btn-animated {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-animated:hover {
+  transform: scale(1.02);
+  filter: brightness(1.08);
+}
+
+.btn-animated:active {
+  transform: scale(0.98);
+}

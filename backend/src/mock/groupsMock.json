@@ -1,0 +1,46 @@
+[
+  {
+    "groupId": "group-a",
+    "name": "Group A",
+    "standings": [
+      {
+        "position": 1,
+        "teamId": "arg",
+        "teamName": "Argentina",
+        "played": 3,
+        "points": 9,
+        "goalDifference": 7
+      },
+      {
+        "position": 2,
+        "teamId": "bra",
+        "teamName": "Brazil",
+        "played": 3,
+        "points": 6,
+        "goalDifference": 2
+      }
+    ]
+  },
+  {
+    "groupId": "group-b",
+    "name": "Group B",
+    "standings": [
+      {
+        "position": 1,
+        "teamId": "fra",
+        "teamName": "France",
+        "played": 3,
+        "points": 7,
+        "goalDifference": 4
+      },
+      {
+        "position": 2,
+        "teamId": "esp",
+        "teamName": "Spain",
+        "played": 3,
+        "points": 4,
+        "goalDifference": 0
+      }
+    ]
+  }
+]

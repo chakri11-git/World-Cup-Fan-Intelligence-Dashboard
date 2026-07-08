@@ -1,0 +1,10 @@
+{
+  "generalTrends": "Tactical analysis of the tournament shows a major shift toward high-pressing 4-3-3 setups, with wide wingers exploiting vertical half-spaces. Set piece conversion rates have risen by 14% compared to the 2022 edition.",
+  "topAIPredictedWinners": [
+    { "team": "Argentina", "probability": 28 },
+    { "team": "France", "probability": 24 },
+    { "team": "Brazil", "probability": 18 }
+  ],
+  "engine": "Gemini Pro Model 1.5",
+  "lastUpdated": "2026-07-07T23:35:00Z"
+}
