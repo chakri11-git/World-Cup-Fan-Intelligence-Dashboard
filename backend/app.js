@@ -22,6 +22,9 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   ? ['https://world-cup-fan-intelligence-dashboar-seven.vercel.app'] 
   : ['http://localhost:3000', 'http://localhost:5173'];
 
+// nosemgrep: express-check-csurf-middleware-usage -- this is a stateless JSON REST API with
+// no cookie-based session auth; CSRF protection applies to cookie-authenticated form submissions,
+// which this app does not use. Revisit if cookie-based sessions are introduced later.
 app.use(cors({
   origin: (origin, callback) => {
     const originClean = origin ? origin.replace(/\/$/, '') : '';

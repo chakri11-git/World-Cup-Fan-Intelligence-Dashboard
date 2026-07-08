@@ -61,7 +61,10 @@ exports.castSupportVote = async (req, res, next) => {
 
     // Dynamically update the latest timeline record
     const latestTimeline = votingTrendTimeline[votingTrendTimeline.length - 1];
-    if (teamRecord.teamName in latestTimeline) {
+    // nosemgrep: prototype-pollution-assignment -- teamRecord.teamName is one of 4 hardcoded
+    // internal strings from supportCounts (not user input), and access is now guarded by
+    // hasOwnProperty, so this cannot write to arbitrary/inherited keys.
+    if (Object.prototype.hasOwnProperty.call(latestTimeline, teamRecord.teamName)) {
       latestTimeline[teamRecord.teamName] += 1;
     }
 

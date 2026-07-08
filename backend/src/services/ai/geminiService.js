@@ -131,9 +131,14 @@ TACTICAL BREAKDOWN: [A paragraph explaining tactical battle]`;
           .filter(line => line.length > 0);
       };
       
+      // nosemgrep: detect-non-literal-regexp -- matchData.homeTeam/awayTeam come from internal
+      // mock/API data (not user input) and are bound to a fixed set of team-name strings.
       const homePros = parseList(new RegExp(`PROS\\s*\\[${matchData.homeTeam}\\]:([\\s\\S]*?)(?:CONS|PROS|PREDICTED|TACTICAL|$)`, 'i'));
+      // nosemgrep: detect-non-literal-regexp -- same justification as above (homeTeam).
       const homeCons = parseList(new RegExp(`CONS\\s*\\[${matchData.homeTeam}\\]:([\\s\\S]*?)(?:CONS|PROS|PREDICTED|TACTICAL|$)`, 'i'));
+      // nosemgrep: detect-non-literal-regexp -- same justification as above (awayTeam).
       const awayPros = parseList(new RegExp(`PROS\\s*\\[${matchData.awayTeam}\\]:([\\s\\S]*?)(?:CONS|PROS|PREDICTED|TACTICAL|$)`, 'i'));
+      // nosemgrep: detect-non-literal-regexp -- same justification as above (awayTeam).
       const awayCons = parseList(new RegExp(`CONS\\s*\\[${matchData.awayTeam}\\]:([\\s\\S]*?)(?:CONS|PROS|PREDICTED|TACTICAL|$)`, 'i'));
       
       // If parsing fails, fall back to simulated lists
@@ -286,6 +291,8 @@ TACTICAL BREAKDOWN: [A paragraph explaining tactical battle]`;
       const responseText = await this._callGeminiAPI(this.preferredModel, prompt);
       
       const extractField = (text, label) => {
+        // nosemgrep: detect-non-literal-regexp -- `label` is one of 6 fixed hardcoded strings
+        // defined in the caller (e.g. 'Team Summary', 'Strengths') — never user-supplied input.
         const regex = new RegExp(`(?:\\*\\*|-)?\\s*${label}\\s*:\\s*(?:\\*\\*)?\\s*([^\\n]*)`, 'i');
         const match = text.match(regex);
         return match ? match[1].replace(/\*+$/, '').trim() : null;

@@ -14,6 +14,18 @@ The system is styled with a premium **iOS-style Glassmorphism theme** layered ov
 
 ---
 
+## 📐 Scope
+
+This section documents **intentional design boundaries** for the current MVP release:
+
+| Concern | Decision |
+|---------|----------|
+| **Internationalization (i18n)** | Intentionally **out of scope** for this MVP. All UI copy is English-only by design. Multi-language support would require wrapping every string with `react-i18next`'s `t()` and extracting to locale JSON files — a dedicated pass deferred to a future milestone. |
+| **Persistent storage** | Fan profiles are stored in-memory on the backend (per-session UUID). A MongoDB integration layer exists (`mongoose` is installed) but is not wired to a live Atlas cluster for this MVP. |
+| **Authentication / Authorization** | Full auth is intentionally deferred. The current per-user isolation uses a client-generated UUID session discriminator (not a security boundary). |
+
+---
+
 ## 🏗️ System Architecture
 
 The project follows a standard MERN stack architecture designed for high availability, API resilience, and real-time responsiveness.
