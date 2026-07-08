@@ -25,7 +25,7 @@ const Stats = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex flex-col items-center sm:items-start px-8 py-6"
+              className="flex flex-col items-center px-8 py-6 text-center"
             >
               <span className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent">
                 {stat.value}

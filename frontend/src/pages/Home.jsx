@@ -39,7 +39,7 @@ const Home = () => {
 
   // Establish WebSockets client connection and map incoming broadcasts
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
 
     socket.on('connect', () => {
       console.log('[Socket.io] Connected to WebSockets server successfully.');
