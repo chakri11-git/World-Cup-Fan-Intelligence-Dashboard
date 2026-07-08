@@ -1,5 +1,11 @@
 # 🏆 World Cup Fan Dashboard (MERN Stack)
 
+🌐 **Live Application**: [Vercel Frontend](https://world-cup-fan-intelligence-dashboar-seven.vercel.app/)  
+⚙️ **Production API**: [Render Backend](https://world-cup-fan-intelligence-dashboard.onrender.com)  
+📁 **GitHub Repository**: [World Cup Fan Intelligence Dashboard](https://github.com/chakri11-git/World-Cup-Fan-Intelligence-Dashboard)
+
+---
+
 Welcome to the **World Cup Fan Dashboard**—a highly interactive, real-time MERN stack application designed for football fans. It provides live match scores, group standings, team statistics, AI-grounded tactical forecasts, and live community chat rooms with real-time sentiment analysis.
 
 The system is styled with a premium **iOS-style Glassmorphism theme** layered over dynamic stadium wallpapers to give users an immersive, stadium-like experience.
