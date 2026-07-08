@@ -16,10 +16,10 @@ const io = socketIo(server, {
   cors: {
     origin: (origin, callback) => {
       const originClean = origin ? origin.replace(/\/$/, '') : '';
+      const isDev = process.env.NODE_ENV !== 'production';
       if (!origin || 
           originClean.endsWith('.vercel.app') || 
-          originClean.includes('localhost') || 
-          originClean.includes('127.0.0.1')
+          (isDev && (originClean.includes('localhost') || originClean.includes('127.0.0.1')))
       ) {
         callback(null, true);
       } else {

@@ -143,6 +143,30 @@ This generates an optimized `/dist` folder with bundled WebP assets, compressed 
 
 ---
 
+## 📡 External Data Sources & Licensing Status
+
+The application integrates with the following external data feeds:
+
+1. **football-data.org (Primary Feed)**:
+   * **Tier Status**: Free tier subscription.
+   * **Rate Limits**: Capped at 10 requests/minute.
+   * **Caching**: Handled via backend in-memory cache with an automated 60-second expiration window to prevent hitting provider limits.
+
+2. **RapidAPI / API-Football (Fallback Feed)**:
+   * **Tier Status**: Free tier subscription.
+   * **API Url**: `https://api-football-v1.p.rapidapi.com/v3`.
+   * **Usage**: Leveraged as a fallback data source if the primary `football-data.org` server is unreachable or rate-limited.
+
+3. **Grounded AI Engine (Google Gemini API)**:
+   * **Tier Status**: Free/Developer Tier (Google Generative AI SDK).
+   * **Model**: `gemini-2.0-flash`.
+
+4. **Simulation Mode (Offline Fallback)**:
+   * **Trigger**: Automatically activated if API keys (`FOOTBALL_DATA_ORG_KEY`, `GEMINI_API_KEY`) are missing, expired, or exceed free rate limits.
+   * **Behavior**: Serves mock datasets and simulates real-time score updates using structured local JSON mocks (`matchesMock.json`, `teamsMock.json`, etc.), ensuring full application functionality in offline/development modes.
+
+---
+
 ## 🔒 Security & Session Authentication Notes
 
 * **No Server-Side Session Auth**: In this current stage of the MVP development, authentication is fully mocked. There are no registration or login/logout endpoints, and all authorization states are handled client-side. The dead JWT `authMiddleware.js` file has been fully removed from the source tree to clearly reflect that server-side auth is not yet implemented.

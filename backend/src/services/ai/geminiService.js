@@ -207,6 +207,15 @@ TACTICAL BREAKDOWN: [A paragraph explaining tactical battle]`;
 
   /**
    * Generates highly grounded team summary and insights based strictly on JSON data (max 120 words).
+   * 
+   * @param {Object} teamData - The structured contender statistics (rank, star player, stats) to ground the summary.
+   * @param {Object} fanProfileData - The fan's profile selections used to personalize the relevance of the insights.
+   * @param {Array} historyData - Optional array of historical matches to ground the team records.
+   * @returns {Promise<string>} The AI-generated summary grounded strictly in the provided data.
+   * 
+   * Grounding Source: Grounded strictly against the supplied `teamData`, `fanProfileData`, and `historyData` arrays.
+   * Hallucination Prevention: Instructs the model to limit its context to the parameters to avoid hallucinated stats or fixtures.
+   * Fallback Behavior: If the Gemini API key is absent or the request fails, it falls back to a simulated template summary.
    */
   async generateGroundedInsights(teamData, fanProfileData, historyData) {
     const HISTORICAL_RECORDS = {
@@ -419,6 +428,17 @@ TACTICAL BREAKDOWN: [A paragraph explaining tactical battle]`;
     return 'NEUTRAL';
   }
 
+  /**
+   * Generates a list of capped AI recommendations tailored to the fan's profile properties.
+   * 
+   * @param {Object} profile - The fan profile parameters (favoriteTeam, favoritePlayer, reasonForSupport).
+   * @param {Array} supportHistory - Optional array representing voting metrics to personalize the suggestions.
+   * @returns {Promise<Array>} Capped array containing exactly 3 recommended items.
+   * 
+   * Grounding Source: Grounded against the user's explicit profile selections and voting counts.
+   * Hallucination Prevention: Bound by system prompt rules to output exactly 3 recommendations with specific JSON keys.
+   * Fallback Behavior: If no Gemini API key is configured or the API is unreachable, it defaults to `_simulateFanRecommendations` template suggestions.
+   */
   async generateFanRecommendations(profile, supportHistory = []) {
     const favoriteTeam = profile.favoriteTeam || 'Argentina';
     const favoritePlayer = profile.favoritePlayer || 'Lionel Messi';

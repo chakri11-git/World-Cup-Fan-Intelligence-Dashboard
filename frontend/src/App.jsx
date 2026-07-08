@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
-import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import './assets/styles.css';
 import './index.css';
@@ -12,11 +11,9 @@ import './index.css';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <AppProvider>
-          <AppRoutes />
-        </AppProvider>
-      </AuthProvider>
+      <AppProvider>
+        <AppRoutes />
+      </AppProvider>
     </Router>
   );
 }

@@ -17,6 +17,9 @@ jest.mock('../src/utils/logger', () => ({
 const footballApiService = require('../src/services/api/footballApiService');
 const geminiService = require('../src/services/ai/geminiService');
 const matchController = require('../src/controllers/matchController');
+const aiController = require('../src/controllers/aiController');
+const supportController = require('../src/controllers/supportController');
+const fanController = require('../src/controllers/fanController');
 const Match = require('../src/models/Match');
 
 describe('Backend Unit Tests', () => {
@@ -104,6 +107,60 @@ describe('Backend Unit Tests', () => {
       const matches = await footballApiService.getAllMatches();
       expect(matches).toBeInstanceOf(Array);
       expect(matches.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Input Validation Edge Cases', () => {
+    it('matchController.getMatchById should fail with 400 for invalid ID format', async () => {
+      const req = { params: { id: 'invalid/path/manipulation!!' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+      const next = jest.fn();
+
+      await matchController.getMatchById(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+    });
+
+    it('aiController.postFanChat should fail with 400 when missing fields', async () => {
+      const req = { body: {} }; // Missing username/message/matchId
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+      const next = jest.fn();
+
+      await aiController.postFanChat(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+    });
+
+    it('supportController.castSupportVote should fail with 444 for unknown teamId', async () => {
+      const req = { body: { teamId: 'unknown_country_team_abc' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+      const next = jest.fn();
+
+      await supportController.castSupportVote(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(444);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+    });
+
+    it('fanController.getRecommendations should default gracefully if profile properties are missing', async () => {
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+      const next = jest.fn();
+
+      await fanController.getRecommendations(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true, data: expect.any(Array) }));
     });
   });
 });
